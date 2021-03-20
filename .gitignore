@@ -3,3 +3,10 @@
 ################################################################################
 
 /Galgenraten.Core/.vs
+/Galgenraten.Core/Galgenraten.WPF/bin/Debug
+/Galgenraten.Core/Galgenraten.WPF/obj
+/Galgenraten.Core/Galgenraten.Test/bin/Debug
+/Galgenraten.Core/Galgenraten.Test/obj
+/Galgenraten.Core/Galgenraten.Core/bin/Debug
+/Galgenraten.Core/Galgenraten.Core/obj
+/.vs
