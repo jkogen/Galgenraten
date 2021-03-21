@@ -13,6 +13,10 @@ namespace Galgenraten.Core.ViewModels
 {
     public class MainViewModel: ViewModelBase
     {
+        #region private fields
+        private IList<Spiel> Spiele = new List<Spiel>();
+        private int maximaleVersuche = 16;
+        #endregion
 
         #region properties
         private Spiel aktuellesSpiel = new Spiel();
@@ -22,25 +26,51 @@ namespace Galgenraten.Core.ViewModels
             get { return aktuellesSpiel; }
             set { SetProperty(ref aktuellesSpiel, value); }
         }
-        #endregion
 
+        private int spieleGespielt;
+
+        public int SpieleGespielt
+        {
+            get { return Spiele.Count(); }
+            set { SetProperty(ref spieleGespielt, SpieleGespielt);  }
+        }
+
+        private int spieleGewonnen;
+
+        public int SpieleGewonnen
+        {
+            get { return Spiele.Where(a => a.Gewonnen==true).Count(); }
+            set { SetProperty(ref spieleGewonnen, SpieleGewonnen); }
+        }
+
+
+
+        #endregion
 
         public MainViewModel()
         {
             AktuellesSpiel.StarteSpiel();
-            RateBuchstabeCommand = new RelayCommand(RateBuchstabenExecute, RateBuchstabenCanExecute);
-            StarteNeuesSpielCommand = new RelayCommand(StarteNeuesSpielExecute);
-            AufloesenCommand = new RelayCommand(AufloesenExecute, AufloesenCanExecute);
+            InitCommands();
         }
 
         #region commands
+        private void InitCommands()
+        {
+            RateBuchstabeCommand = new RelayCommand(RateBuchstabenExecute, RateBuchstabenCanExecute);
+            StarteNeuesSpielCommand = new RelayCommand(StarteNeuesSpielExecute);
+            AufloesenCommand = new RelayCommand(AufloesenExecute, AufloesenCanExecute);
+            AendereSchwierigkeitCommand = new RelayCommand(AendereSchwierigkeitExecute, AendereSchwierigkeitCanExecute);
+        }
+
         public ICommand RateBuchstabeCommand { get; private set; }
         public ICommand StarteNeuesSpielCommand { get; private set; }
         public ICommand AufloesenCommand { get; private set; }
-
+        public ICommand AendereSchwierigkeitCommand { get; private set; }
         public void RateBuchstabenExecute(object parameter)
         {
-            if (parameter as Buchstabe is null)
+            if (parameter as Buchstabe is null 
+                //oder buchstabe wurde schon gezogen
+                ||AktuellesSpiel.MoeglicheBuchstaben.Where(a => a == parameter as Buchstabe && a.WurdeGezogen==true).Count()>0)
                 return;
 
             AktuellesSpiel.RateBuchstaben(((Buchstabe)parameter).Zeichen);
@@ -53,7 +83,10 @@ namespace Galgenraten.Core.ViewModels
 
         public void StarteNeuesSpielExecute(object parameter)
         {
-            AktuellesSpiel.StarteSpiel();
+            Spiele.Add(AktuellesSpiel.Clone() as Spiel);
+            AktuellesSpiel.StarteSpiel(maximaleVersuche);
+            SpieleGespielt = SpieleGespielt; //propertychanged aufrufen
+            SpieleGewonnen = SpieleGewonnen; //propertychanged aufrufen
         }
 
         public bool AufloesenCanExecute(object parameter)
@@ -64,6 +97,29 @@ namespace Galgenraten.Core.ViewModels
         public void AufloesenExecute(object parameter)
         {
             AktuellesSpiel.Aufloesen();
+        }
+
+        public void AendereSchwierigkeitExecute(object parameter)
+        {
+            if (parameter as string is null)
+                throw new ArgumentException("kein string als parameter");
+
+            if (!new List<string>() { "einfach", "mittel", "schwer" }.Contains(parameter.ToString().ToLower()))
+                throw new ArgumentException("string enthaelt nicht keines der signalwoerter einfach, mittel oder schwer");
+
+            if (parameter.ToString().ToLower().Contains("einfach"))
+                maximaleVersuche = 16;
+            else if (parameter.ToString().ToLower().Contains("mittel"))
+                maximaleVersuche = 14;
+            else if (parameter.ToString().ToLower().Contains("schwer"))
+                maximaleVersuche = 12;
+
+            AktuellesSpiel.MaximaleAnzahlVonVersuchen = maximaleVersuche;
+        }
+
+        public bool AendereSchwierigkeitCanExecute(object parameter)
+        {
+            return AktuellesSpiel.Versuche == 0;
         }
         #endregion
     }

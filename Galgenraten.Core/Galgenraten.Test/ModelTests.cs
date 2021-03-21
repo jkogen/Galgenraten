@@ -7,7 +7,7 @@ using System.Linq;
 namespace Galgenraten.Test
 {
     [TestClass]
-    public class GalgenratenTest
+    public class ModelTests
     {
         Spiel spiel;
 
@@ -36,12 +36,6 @@ namespace Galgenraten.Test
         }
 
         [TestMethod]
-        public void MainViewModelWirdErzeugt()
-        {
-            new MainViewModel();
-        }
-
-        [TestMethod]
         public void SpielHatMoeglicheBuchstaben()
         {
             if (spiel is null)
@@ -60,6 +54,18 @@ namespace Galgenraten.Test
 
             foreach (var buchstabe in buchstaben.Select(a => a))
                 spiel.RateBuchstaben(buchstabe);
+        }
+
+        [TestMethod]
+        public void Aufloesen()
+        {
+            if (spiel is null)
+                StarteSpiel();
+
+            spiel.Aufloesen();
+
+            Assert.IsTrue(spiel.AktuellesWort.IstAufgeloest);
+            Assert.IsTrue(spiel.Ende);
         }
     }
 }

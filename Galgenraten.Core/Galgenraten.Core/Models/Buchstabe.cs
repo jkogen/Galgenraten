@@ -56,7 +56,7 @@ namespace Galgenraten.Core.Models
         {
             //setzt die liste neu
             //wenn das zeichen vor kommt, wird es als gezogen markiert
-            return buchstaben.Select(a => new Buchstabe(a.Zeichen, true)).ToList();
+            return buchstaben.Select(a => new Buchstabe(a.Zeichen, a.Zeichen==buchstabe || a.WurdeGezogen)).ToList();
         }
     }
 }

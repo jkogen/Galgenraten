@@ -10,6 +10,7 @@ namespace Galgenraten.Core.Models
 {
     public class Wort: ViewModelBase
     {
+        #region Properties
         private IList<Buchstabe> buchstaben;
 
         public IList<Buchstabe> Buchstaben
@@ -17,6 +18,13 @@ namespace Galgenraten.Core.Models
             get { return buchstaben; }
             set { SetProperty(ref buchstaben, value); }
         }
+
+        /// <summary>
+        /// Prueft ob jeder Buchstabe erraten wurde
+        /// </summary>
+        /// <returns></returns>
+        public bool IstAufgeloest => Buchstaben.Where(a => a.RichtigErraten == false).Count() == 0;
+        #endregion
 
         /// <summary>
         /// Initialisiert das Aktuelle Wort mit den Buchstaben
@@ -27,6 +35,7 @@ namespace Galgenraten.Core.Models
             Buchstaben = wort.Select(a => new Buchstabe(a)).ToList();
         }
 
+        #region methoden
         /// <summary>
         /// Gibt die Woerter getrennt nach Zeilenumbruch zurueck, die mit Großbuchstaben beginnen
         /// </summary>
@@ -77,20 +86,12 @@ namespace Galgenraten.Core.Models
         }
 
         /// <summary>
-        /// Prueft ob jeder Buchstabe erraten wurde
-        /// </summary>
-        /// <returns></returns>
-        public bool IstAufgeloest()
-        {
-            return Buchstaben.Where(a => a.RichtigErraten == false).Count() == 0;
-        }
-
-        /// <summary>
         /// Setzt alle Buchstaben als erraten
         /// </summary>
         public void Aufloesen()
         {
             Buchstaben = Buchstaben.Select(a => new Buchstabe(a.Zeichen, false, true)).ToList();
         }
+        #endregion
     }
 }

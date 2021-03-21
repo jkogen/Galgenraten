@@ -6,84 +6,134 @@
         xmlns:local="clr-namespace:Galgenraten.WPF"
         mc:Ignorable="d"
         xmlns:core="clr-namespace:Galgenraten.Core.ViewModels;assembly=Galgenraten.Core"
-        Title="Galgenraten" Height="350" Width="750"
-        MinWidth="300"
-        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity">
+        Title="Galgenraten" Height="550" Width="900"
+        MinWidth="700"
+        MinHeight="500"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <core:MainViewModel x:Key="mvw"/>
     </Window.Resources>
-    <StackPanel x:Name="stckPnlRoot" Margin="20" HorizontalAlignment="Center" DataContext="{StaticResource mvw}">
-        <TextBlock HorizontalAlignment="Center">Gesuchtes Wort</TextBlock>
-        <ListView ItemsSource="{Binding AktuellesSpiel.AktuellesWort.Buchstaben, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"  Margin="0,0,0,20">
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <VirtualizingStackPanel Orientation="Horizontal" HorizontalAlignment="Center"></VirtualizingStackPanel>
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <DockPanel>
-                        <TextBlock  FontSize="20" TextAlignment="Center" FontWeight="Bold" Width="20">
-                            <TextBlock.Style>
-                                <Style TargetType="{x:Type TextBlock}">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding RichtigErraten}" Value="False">
-                                            <Setter Property="Text" Value="-"></Setter>
-                                        </DataTrigger>
+    <ScrollViewer Margin="20" HorizontalAlignment="Center" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <StackPanel x:Name="stckPnlRoot"  DataContext="{StaticResource mvw}">
+            <TextBlock HorizontalAlignment="Center" FontSize="13">Gesuchtes Wort</TextBlock>
+            <ListView ItemsSource="{Binding AktuellesSpiel.AktuellesWort.Buchstaben, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"  Margin="0,5,0,20">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel Orientation="Horizontal" HorizontalAlignment="Center"></VirtualizingStackPanel>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <DockPanel>
+                            <TextBlock  FontSize="24" TextAlignment="Center" FontWeight="Bold" Width="22">
+                                <TextBlock.Style>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding RichtigErraten}" Value="False">
+                                                <Setter Property="Text" Value="-"></Setter>
+                                            </DataTrigger>
 
-                                        <DataTrigger Binding="{Binding RichtigErraten}" Value="True">
-                                            <Setter Property="Text" Value="{Binding Zeichen}"></Setter>
-                                        </DataTrigger>
+                                            <DataTrigger Binding="{Binding RichtigErraten}" Value="True">
+                                                <Setter Property="Text" Value="{Binding Zeichen}"></Setter>
+                                            </DataTrigger>
 
-                                        <DataTrigger Binding="{Binding ElementName=stckPnlRoot, Path=DataContext.AktuellesSpiel.Gewonnen}" Value="True">
-                                            <Setter Property="Foreground" Value="Green"></Setter>
-                                        </DataTrigger>
+                                            <DataTrigger Binding="{Binding ElementName=stckPnlRoot, Path=DataContext.AktuellesSpiel.Gewonnen}" Value="True">
+                                                <Setter Property="Foreground" Value="Green"></Setter>
+                                            </DataTrigger>
 
-                                        <DataTrigger Binding="{Binding ElementName=stckPnlRoot, Path=DataContext.AktuellesSpiel.Gewonnen}" Value="False">
-                                            <Setter Property="Foreground" Value="Black"></Setter>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
-                    </DockPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+                                            <DataTrigger Binding="{Binding ElementName=stckPnlRoot, Path=DataContext.AktuellesSpiel.Gewonnen}" Value="False">
+                                                <Setter Property="Foreground" Value="Black"></Setter>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </DockPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
 
-        <TextBlock HorizontalAlignment="Center">Auswahlmöglichkeiten</TextBlock>
-        <ListView  x:Name="lstVwMoeglichkeiten" ItemsSource="{Binding AktuellesSpiel.MoeglicheBuchstaben, UpdateSourceTrigger=PropertyChanged}"  Margin="0,0,0,20">
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <VirtualizingStackPanel Orientation="Horizontal"></VirtualizingStackPanel>
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <DockPanel IsEnabled="{Binding WurdeGezogen, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
-                        <TextBlock IsEnabled="{Binding WurdeGezogen, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Text="{Binding Zeichen}" FontWeight="Bold" FontSize="16" Width="15" TextAlignment="Center"></TextBlock>
-                    </DockPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="SelectionChanged">
-                    <i:InvokeCommandAction Command="{Binding RateBuchstabeCommand}" CommandParameter="{Binding ElementName=lstVwMoeglichkeiten, Path=SelectedItem}"></i:InvokeCommandAction>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </ListView>
+            <TextBlock HorizontalAlignment="Center"  FontSize="13">Auswahlmöglichkeit</TextBlock>
+            <ListView x:Name="lstVwMoeglichkeiten" ItemsSource="{Binding AktuellesSpiel.MoeglicheBuchstaben, UpdateSourceTrigger=PropertyChanged}"  Margin="0,5,0,30">
+     
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel Orientation="Horizontal"></VirtualizingStackPanel>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+            
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <DockPanel  IsEnabled="{Binding WurdeGezogen, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, Converter={StaticResource boolInverseConverter}}">
+                            <TextBlock Text="{Binding Zeichen}" FontWeight="Bold" FontSize="20" Width="18" TextAlignment="Center">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock"> 
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding WurdeGezogen}" Value="True">
+                                                <Setter Property="Foreground" Value="LightGray">
+                                                </Setter>
+                                            </DataTrigger>
 
-        <TextBlock HorizontalAlignment="Center">Versuche</TextBlock>
+                                            <DataTrigger Binding="{Binding WurdeGezogen}" Value="False">
+                                                <Setter Property="Foreground" Value="DarkSlateGray">
+                                                </Setter>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </DockPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding RateBuchstabeCommand}" CommandParameter="{Binding ElementName=lstVwMoeglichkeiten, Path=SelectedItem}"></i:InvokeCommandAction>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ListView>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <TextBlock FontSize="28" HorizontalAlignment="Center" Text="{Binding AktuellesSpiel.FehlerhafteVersuche, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-            <TextBlock FontSize="28" HorizontalAlignment="Center" Margin="5,0">/</TextBlock>
-            <TextBlock FontSize="28" HorizontalAlignment="Center" Margin="0,0,0,20" Text="{Binding AktuellesSpiel.MaximaleAnzahlVonVersuchen}"/>
-        </StackPanel>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Command="{Binding AufloesenCommand}" Width="200" Height="30" Content="Auflösen" Margin="5,0"/>
-            <Button Command="{Binding StarteNeuesSpielCommand}" Margin="5,0" Width="200" Height="30" Content="Neues Spiel"/>
-        </StackPanel>
+            <GroupBox BorderThickness="3" Header="Statistik" Margin="0,0,0,20" Width="400">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+
+                    <StackPanel Width="150">
+                        <TextBlock HorizontalAlignment="Center">Aktuelle Versuche</TextBlock>
+
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBlock FontSize="32" HorizontalAlignment="Center" Text="{Binding AktuellesSpiel.FehlerhafteVersuche, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
+                            <TextBlock FontSize="32" HorizontalAlignment="Center" Margin="5,0">/</TextBlock>
+                            <TextBlock FontSize="32" HorizontalAlignment="Center"  Text="{Binding AktuellesSpiel.MaximaleAnzahlVonVersuchen, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Width="150">
+                        <TextBlock HorizontalAlignment="Center">Gewonnene Spele</TextBlock>
+
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBlock FontSize="32" HorizontalAlignment="Center" Text="{Binding SpieleGewonnen, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
+                            <TextBlock FontSize="32" HorizontalAlignment="Center" Margin="5,0">/</TextBlock>
+                            <TextBlock FontSize="32" HorizontalAlignment="Center"  Text="{Binding SpieleGespielt, Mode=OneWay}"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox BorderThickness="3" Header="Schwierigkeit" Width="400" Height="80"  Margin="0,0,0,20">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <RadioButton Width="100" Command="{Binding AendereSchwierigkeitCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Content}" IsChecked="True">Einfach</RadioButton>
+                    <RadioButton Width="100" Command="{Binding AendereSchwierigkeitCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Content}">Mittel</RadioButton>
+                    <RadioButton Width="100" Command="{Binding AendereSchwierigkeitCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Content}">Schwer</RadioButton>
+                </StackPanel>
+            </GroupBox>
+
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Command="{Binding AufloesenCommand}" Width="200" Height="30" Content="Auflösen" Margin="5,0"/>
+                <Button Command="{Binding StarteNeuesSpielCommand}" Margin="5,0" Width="200" Height="30" Content="Neues Spiel"/>
+            </StackPanel>
        
-    </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
 </Window>

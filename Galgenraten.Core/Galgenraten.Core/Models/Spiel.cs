@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace Galgenraten.Core.Models
 {
-    public class Spiel : ViewModelBase
+    public class Spiel : ViewModelBase, ICloneable
     {
         private IList<string> Woerter;
 
+        #region properties
         private Wort aktuellesWort;
 
         public Wort AktuellesWort
@@ -27,8 +28,13 @@ namespace Galgenraten.Core.Models
             set { SetProperty(ref moeglicheBuchstaben, value); }
         }
 
-        public int MaximaleAnzahlVonVersuchen { get; set; } = 16;
+        private int maximaleAnzahlVonVersuchen = 16;
 
+        public int MaximaleAnzahlVonVersuchen
+        {
+            get { return maximaleAnzahlVonVersuchen; }
+            set { SetProperty(ref maximaleAnzahlVonVersuchen, value); }
+        }
 
         private bool gewonnen;
 
@@ -48,7 +54,7 @@ namespace Galgenraten.Core.Models
             set 
             {
                 SetProperty(ref erfolgreicheVersuche, value);
-                Versuche = Versuche;
+                Versuche = Versuche; //propertychanged aufrufen
             }
         }
 
@@ -61,7 +67,7 @@ namespace Galgenraten.Core.Models
             set 
             {
                 SetProperty(ref fehlerhafteVersuche, value); 
-                Versuche = Versuche;
+                Versuche = Versuche; //propertychanged aufrufen
             }
         }
 
@@ -77,11 +83,9 @@ namespace Galgenraten.Core.Models
             set 
             {
                 SetProperty(ref versuche, ErfolgreicheVersuche + FehlerhafteVersuche);
-                versuche = ErfolgreicheVersuche + FehlerhafteVersuche;
             }
         }
-
-
+        #endregion
 
         public Spiel(string dictionary = null)
         {
@@ -95,7 +99,7 @@ namespace Galgenraten.Core.Models
         /// <summary>
         /// Setzt ein neues zufaelliges Wort 
         /// </summary>
-        public void StarteSpiel()
+        public void StarteSpiel(int maximaleAnzahlVonVersuchen = 16)
         {
             var x = new Random();
             var zufallsIndex = x.Next(0, Woerter.Count);
@@ -105,6 +109,7 @@ namespace Galgenraten.Core.Models
             Gewonnen = false;
             ErfolgreicheVersuche = 0;
             FehlerhafteVersuche = 0;
+            MaximaleAnzahlVonVersuchen = maximaleAnzahlVonVersuchen;
         }
 
         /// <summary>
@@ -123,10 +128,10 @@ namespace Galgenraten.Core.Models
             else
                 FehlerhafteVersuche++;
 
-            if (FehlerhafteVersuche == MaximaleAnzahlVonVersuchen || AktuellesWort.IstAufgeloest())
+            if (FehlerhafteVersuche == MaximaleAnzahlVonVersuchen || AktuellesWort.IstAufgeloest)
                 Ende = true;
 
-            if (AktuellesWort.IstAufgeloest())
+            if (AktuellesWort.IstAufgeloest)
                 Gewonnen = true;
         }
 
@@ -136,6 +141,16 @@ namespace Galgenraten.Core.Models
         public void Aufloesen()
         {
             AktuellesWort.Aufloesen();
+            Ende = true;
+        }
+
+        /// <summary>
+        /// Creates a shallow copy
+        /// </summary>
+        /// <returns></returns>
+        public object Clone()
+        {
+            return MemberwiseClone();
         }
         #endregion
     }
