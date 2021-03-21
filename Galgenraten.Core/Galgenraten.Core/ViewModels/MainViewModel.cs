@@ -15,7 +15,7 @@ namespace Galgenraten.Core.ViewModels
     {
         #region private fields
         private IList<Spiel> Spiele = new List<Spiel>();
-        private int maximaleVersuche = 16;
+        private int maximaleVersuche = 10;
         #endregion
 
         #region properties
@@ -49,7 +49,7 @@ namespace Galgenraten.Core.ViewModels
 
         public MainViewModel()
         {
-            AktuellesSpiel.StarteSpiel();
+            AktuellesSpiel.StarteSpiel(maximaleVersuche);
             InitCommands();
         }
 
@@ -91,7 +91,7 @@ namespace Galgenraten.Core.ViewModels
 
         public bool AufloesenCanExecute(object parameter)
         {
-            return RateBuchstabenCanExecute(null);
+            return !AktuellesSpiel.Gewonnen;
         }
 
         public void AufloesenExecute(object parameter)
@@ -108,11 +108,11 @@ namespace Galgenraten.Core.ViewModels
                 throw new ArgumentException("string enthaelt nicht keines der signalwoerter einfach, mittel oder schwer");
 
             if (parameter.ToString().ToLower().Contains("einfach"))
-                maximaleVersuche = 16;
+                maximaleVersuche = 10;
             else if (parameter.ToString().ToLower().Contains("mittel"))
-                maximaleVersuche = 14;
+                maximaleVersuche = 7;
             else if (parameter.ToString().ToLower().Contains("schwer"))
-                maximaleVersuche = 12;
+                maximaleVersuche = 5;
 
             AktuellesSpiel.MaximaleAnzahlVonVersuchen = maximaleVersuche;
         }

@@ -46,7 +46,7 @@ namespace Galgenraten.Core.Models
             return File.ReadAllText(path, Encoding.GetEncoding(1252))
                 .Split('\n')
                 .Where(a => a.Length>0 && char.IsUpper(a[0]) //erstes zeichen soll groß sein (nomen)
-                && !a.Contains("ä") && !a.Contains("ö") && !a.Contains("ü"))
+                && !a.ToLower().Contains("ä") && !a.ToLower().Contains("ö") && !a.ToLower().Contains("ü") && !a.ToLower().Contains("ß"))
                 .Select(a => a.ToUpper().Trim())
                 .ToList();
         }
