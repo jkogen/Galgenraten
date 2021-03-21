@@ -6,3 +6,5 @@ Projektmappe für Galgenraten (C#, .NET Framework) als MVVM-Pattern. Aufgeteilt 
 * Galgenraten.Test für Unit-Tests
 
 <img src="https://i.ibb.co/vH0bqqL/Capture.jpg" />
+
+Wörterbuch, für die automatische Generierung von Wörtern, von Jan Schreiber: https://sourceforge.net/projects/germandict/ 
