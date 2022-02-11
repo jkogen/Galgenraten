@@ -1,7 +1,5 @@
-﻿using Galgenraten.Core.Models;
-using Galgenraten.Core.ViewModels;
+﻿using Galgenraten.Core.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Linq;
 
 namespace Galgenraten.Test

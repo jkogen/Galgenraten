@@ -3,19 +3,18 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Galgenraten.WPF"
         mc:Ignorable="d"
         xmlns:core="clr-namespace:Galgenraten.Core.ViewModels;assembly=Galgenraten.Core"
         Title="Galgenraten" Height="550" Width="900"
         MinWidth="700"
         MinHeight="500"
-        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         WindowStartupLocation="CenterScreen">
-    <Window.Resources>
-        <core:MainViewModel x:Key="mvw"/>
-    </Window.Resources>
+    <Window.DataContext>
+        <core:MainViewModel/>
+    </Window.DataContext>
     <ScrollViewer Margin="20" HorizontalAlignment="Center" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-        <StackPanel x:Name="stckPnlRoot"  DataContext="{StaticResource mvw}">
+        <StackPanel x:Name="stckPnlRoot">
             <TextBlock HorizontalAlignment="Center" FontSize="13">Gesuchtes Wort</TextBlock>
             <ListView ItemsSource="{Binding AktuellesSpiel.AktuellesWort.Buchstaben, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"  Margin="0,5,0,20">
                 <ListView.ItemsPanel>
